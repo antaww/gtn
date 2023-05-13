@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,400;0,700;0,800;0,900;1,100;1,400;1,600;1,900&display=swap');
+
+.game-title-container {
+    perspective: 200px;
+    perspective-origin: 50% 120%;
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+.game-title {
+    font-family: "Poppins", sans-serif;
+    font-size: 4em;
+    font-weight: 900;
+    letter-spacing: .4em;
+    text-align: center;
+}
+
+.game-title:first-child {
+    color: #eeebe7;
+}
+
+.game-title:not(:first-child) {
+    color: #514a2d;
+    left: 0;
+    mix-blend-mode: screen;
+    position: absolute;
+    text-shadow: 0 0 1px #decebc;
+    top: 0;
+}
+
+.game-title:nth-child(2) {
+    opacity: 0.9333333333;
+    transform: translateZ(-3px);
+}
+
+.game-title:nth-child(3) {
+    opacity: 0.8666666667;
+    transform: translateZ(-6px);
+}
+
+.game-title:nth-child(4) {
+    opacity: 0.8;
+    transform: translateZ(-9px);
+}
+
+.game-title:nth-child(5) {
+    opacity: 0.7333333333;
+    transform: translateZ(-12px);
+}
+
+.game-title:nth-child(6) {
+    opacity: 0.6666666667;
+    transform: translateZ(-15px);
+}
+
+.game-title:nth-child(7) {
+    opacity: 0.6;
+    transform: translateZ(-18px);
+}
+
+.game-title:nth-child(8) {
+    opacity: 0.5333333333;
+    transform: translateZ(-21px);
+}
+
+.game-title:nth-child(9) {
+    opacity: 0.4666666667;
+    transform: translateZ(-24px);
+}
+
+.game-title:nth-child(10) {
+    opacity: 0.4;
+    transform: translateZ(-27px);
+}
+
+.game-title:nth-child(11) {
+    opacity: 0.3333333333;
+    transform: translateZ(-30px);
+}
+
+.game-title:nth-child(12) {
+    opacity: 0.2666666667;
+    transform: translateZ(-33px);
+}
+
+.game-title:nth-child(13) {
+    opacity: 0.2;
+    transform: translateZ(-36px);
+}
+
+.game-title:nth-child(14) {
+    opacity: 0.1333333333;
+    transform: translateZ(-39px);
+}
+
+.game-title:nth-child(15) {
+    opacity: 0.0666666667;
+    transform: translateZ(-42px);
+}
+
+.game-title:nth-child(16) {
+    opacity: 0;
+    transform: translateZ(-45px);
+}
