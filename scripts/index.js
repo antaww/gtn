@@ -6,9 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < maxGuesses; i++) {
             const tableRow = document.createElement('tr');
             tableRow.setAttribute('role', 'row');
-            if (i === 0) {
-                tableRow.classList.add('current-row');
-            }
             tableRow.innerHTML = `
                 <td data-cell="guess"></td>
                 <td data-cell="correct-numbers"></td>
@@ -50,31 +47,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     keyboardButtons.forEach(keyboardButton => {
         keyboardButton.addEventListener('click', () => {
-            const currentRow = document.querySelector('.current-row');
-            if (currentRow) {
-                const currentCell = currentRow.querySelector('[data-cell="guess"]');
+            if (game.isRunning) {
                 if (keyboardButton.dataset.key === 'backspace') {
-                    if (currentCell.textContent.length > 0) {
-                        currentCell.textContent = currentCell.textContent.slice(0, -1);
+                    if (game.currentCell.textContent.length > 0) {
+                        game.currentCell.textContent = game.currentCell.textContent.slice(0, -1);
                     }
                 } else if (keyboardButton.dataset.key === 'done') {
-                    if (currentCell.textContent.length === 4) {
-                        currentRow.classList.remove('current-row');
-                        if (game.checkGuess(currentRow)) {
+                    if (game.currentCell.textContent.length === 4) {
+                        game.currentRow.classList.remove('current-row');
+                        if (game.checkGuess(game.currentRow)) {
+                            //todo: game won
                             console.log('game won')
+                            game.stopGame();
                             return;
                         }
-                        if (currentRow.nextElementSibling) {
-                            currentRow.nextElementSibling.classList.add('current-row');
+                        if (game.currentRow.nextElementSibling) {
+                            game.currentRow.nextElementSibling.classList.add('current-row');
+                            game.selectCurrentRow();
                         } else {
                             //todo: game lost
+                            game.stopGame();
                             console.log('game over')
                         }
                     }
                 } else {
-                    if (currentCell.textContent.length < 4) {
-                        if (currentCell.textContent.includes(keyboardButton.dataset.key)) return;
-                        currentCell.textContent += keyboardButton.dataset.key;
+                    if (game.currentCell.textContent.length < 4) {
+                        if (game.currentCell.textContent.includes(keyboardButton.dataset.key)) return;
+                        game.currentCell.textContent += keyboardButton.dataset.key;
                     }
                 }
             }
@@ -84,10 +83,22 @@ document.addEventListener('DOMContentLoaded', () => {
     //todo: reduce backspace / done opacity when not available
 
     const game = {
+        isRunning: false,
         secret: [],
         guesses: [],
         correctNumbers: 0,
         correctPositions: 0,
+        currentRow: null,
+        currentCell: null,
+        startGame() {
+            this.isRunning = true;
+            document.querySelector('.table-header').nextElementSibling.classList.add('current-row');
+            this.selectCurrentRow();
+        },
+        stopGame() {
+            //todo: show popup with secret, guesses.length, play again button
+            this.isRunning = false;
+        },
         generateSecret() {
             while (this.secret.length < 4) {
                 const randomNumber = Math.floor(Math.random() * 10);
@@ -95,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     this.secret.push(randomNumber);
                 }
             }
+            this.startGame();
         },
         checkGuess(currentRow) {
             const currentGuess = currentRow.querySelector('[data-cell="guess"]').textContent;
@@ -116,8 +128,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             currentCorrectNumbers.textContent = this.correctNumbers;
             currentCorrectPositions.textContent = this.correctPositions;
+            this.guesses.push(currentGuess);
 
             return this.correctPositions === 4;
+        },
+        selectCurrentRow() {
+            this.currentRow = document.querySelector('.current-row');
+            this.currentCell = this.currentRow.querySelector('[data-cell="guess"]');
         }
     }
 
