@@ -1,6 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     const maxGuesses = 10;
 
+    setTimeout(() => {
+        document.querySelector('.loading-screen').classList.add('fade-out');
+    }, 500);
+
+    setTimeout(() => {
+        document.querySelector('.loading-screen').remove();
+    }, 1500);
+
     function generateTable() {
         const tableBody = document.querySelector('tbody');
         for (let i = 0; i < maxGuesses; i++) {
@@ -40,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    //Keyboard & table are generated only when the DOM is loaded.
     generateKeyboard();
     generateTable();
 
@@ -63,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                         if (game.currentRow.nextElementSibling) {
                             game.currentRow.nextElementSibling.classList.add('current-row');
-                            game.selectCurrentRow();
+                            game.selectCurrentRow(); // Update currentRow & currentCell
                         } else {
                             //todo: game lost
                             game.stopGame();
@@ -92,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentCell: null,
         startGame() {
             this.isRunning = true;
+            this.clearTable();
             document.querySelector('.table-header').nextElementSibling.classList.add('current-row');
             this.selectCurrentRow();
         },
@@ -135,6 +145,15 @@ document.addEventListener('DOMContentLoaded', () => {
         selectCurrentRow() {
             this.currentRow = document.querySelector('.current-row');
             this.currentCell = this.currentRow.querySelector('[data-cell="guess"]');
+        },
+
+        clearTable() {
+            const tableRows = document.querySelectorAll('tr:not(.table-header)');
+            tableRows.forEach(tableRow => {
+                tableRow.querySelector('[data-cell="guess"]').textContent = '';
+                tableRow.querySelector('[data-cell="correct-numbers"]').textContent = '';
+                tableRow.querySelector('[data-cell="correct-positions"]').textContent = '';
+            });
         }
     }
 

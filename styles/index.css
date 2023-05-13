@@ -1,12 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,400;0,700;0,800;0,900;1,100;1,400;1,600;1,900&display=swap');
 
+:root {
+    --background-color: rgb(222, 206, 188);
+}
+
 * {
     user-select: none;
 }
 
 body {
     align-items: center;
-    background: rgba(211, 190, 165, 0.74);
+    background: var(--background-color);
     color: white;
     display: flex;
     font-family: 'Poppins', sans-serif;
