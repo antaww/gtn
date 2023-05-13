@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const maxGuesses = 8;
+    const maxGuesses = 10;
 
     function generateTable() {
         const tableBody = document.querySelector('tbody');
@@ -51,29 +51,76 @@ document.addEventListener('DOMContentLoaded', () => {
     keyboardButtons.forEach(keyboardButton => {
         keyboardButton.addEventListener('click', () => {
             const currentRow = document.querySelector('.current-row');
-            const currentCell = currentRow.querySelector('[data-cell="guess"]');
-            if (keyboardButton.dataset.key === 'backspace') {
-                if (currentCell.textContent.length > 0) {
-                    currentCell.textContent = currentCell.textContent.slice(0, -1);
-                }
-            } else if (keyboardButton.dataset.key === 'done') {
-                if (currentCell.textContent.length === 4) {
-                    currentRow.classList.remove('current-row');
-                    if (currentRow.nextElementSibling) {
-                        currentRow.nextElementSibling.classList.add('current-row');
-                    } else {
-                        //todo: game over
-                        console.log('game over')
+            if (currentRow) {
+                const currentCell = currentRow.querySelector('[data-cell="guess"]');
+                if (keyboardButton.dataset.key === 'backspace') {
+                    if (currentCell.textContent.length > 0) {
+                        currentCell.textContent = currentCell.textContent.slice(0, -1);
                     }
-                }
-            } else {
-                if (currentCell.textContent.length < 4) {
-                    currentCell.textContent += keyboardButton.dataset.key;
-                    //todo: check if the number is already in the guess
+                } else if (keyboardButton.dataset.key === 'done') {
+                    if (currentCell.textContent.length === 4) {
+                        currentRow.classList.remove('current-row');
+                        if (game.checkGuess(currentRow)) {
+                            console.log('game won')
+                            return;
+                        }
+                        if (currentRow.nextElementSibling) {
+                            currentRow.nextElementSibling.classList.add('current-row');
+                        } else {
+                            //todo: game lost
+                            console.log('game over')
+                        }
+                    }
+                } else {
+                    if (currentCell.textContent.length < 4) {
+                        if (currentCell.textContent.includes(keyboardButton.dataset.key)) return;
+                        currentCell.textContent += keyboardButton.dataset.key;
+                    }
                 }
             }
         });
     });
 
     //todo: reduce backspace / done opacity when not available
+
+    const game = {
+        secret: [],
+        guesses: [],
+        correctNumbers: 0,
+        correctPositions: 0,
+        generateSecret() {
+            while (this.secret.length < 4) {
+                const randomNumber = Math.floor(Math.random() * 10);
+                if (!this.secret.includes(randomNumber)) {
+                    this.secret.push(randomNumber);
+                }
+            }
+        },
+        checkGuess(currentRow) {
+            const currentGuess = currentRow.querySelector('[data-cell="guess"]').textContent;
+            const currentCorrectNumbers = currentRow.querySelector('[data-cell="correct-numbers"]');
+            const currentCorrectPositions = currentRow.querySelector('[data-cell="correct-positions"]');
+            const currentGuessArray = currentGuess.split('');
+            const secretCopy = [...this.secret];
+            this.correctNumbers = 0;
+            this.correctPositions = 0;
+
+            for (let i = 0; i < currentGuessArray.length; i++) {
+                if (secretCopy.includes(currentGuessArray[i] * 1)) {
+                    this.correctNumbers++;
+                    if (secretCopy.indexOf(currentGuessArray[i] * 1) === i) {
+                        this.correctPositions++;
+                    }
+                }
+            }
+
+            currentCorrectNumbers.textContent = this.correctNumbers;
+            currentCorrectPositions.textContent = this.correctPositions;
+
+            return this.correctPositions === 4;
+        }
+    }
+
+    game.generateSecret();
+    console.log(game.secret.join(''));
 });

@@ -30,6 +30,10 @@ table {
     border-collapse: collapse;
 }
 
+tbody {
+    text-align: center;
+}
+
 /*ROW*/
 tr {
     border: 1px solid #ffffff40;
@@ -53,4 +57,14 @@ td:nth-of-type(2n), th:nth-of-type(2n) {
 
 td:nth-of-type(2n+1), th:nth-of-type(2n+1) {
     background: rgba(57, 56, 55, 0.53);
+}
+
+.current-row {
+    background: rgba(72, 71, 70, 0.43);
+}
+
+.game-ui {
+    align-items: center;
+    display: flex;
+    gap: 4em;
 }
