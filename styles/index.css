@@ -72,3 +72,31 @@ td:nth-of-type(2n+1), th:nth-of-type(2n+1) {
     display: flex;
     gap: 4em;
 }
+
+.keyboard-button {
+    background-color: #867e75;
+    border: 1px solid #ffffff40;
+    color: white;
+    font-family: 'Poppins', serif;
+    font-weight: 600;
+    height: 4em;
+    transition: all .3s;
+    width: 4em;
+}
+
+.keyboard-button:hover {
+    background-color: #645e58;
+    cursor: pointer;
+}
+
+.keyboard {
+    display: flex;
+    flex-flow: column;
+    gap: .1em;
+}
+
+.keyboard-row {
+    display: flex;
+    gap: .1em;
+}
+
