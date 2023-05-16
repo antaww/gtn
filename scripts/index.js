@@ -65,8 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (game.currentCell.textContent.length === 4) {
                         game.currentRow.classList.remove('current-row');
                         if (game.checkGuess(game.currentRow)) {
-                            //todo: game won
-                            console.log('game won')
+                            game.gameWon = true;
                             game.stopGame();
                             return;
                         }
@@ -74,9 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             game.currentRow.nextElementSibling.classList.add('current-row');
                             game.selectCurrentRow(); // Update currentRow & currentCell
                         } else {
-                            //todo: game lost
+                            game.gameWon = false;
                             game.stopGame();
-                            console.log('game over')
                         }
                     }
                 } else {
@@ -89,34 +87,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    //todo: reduce backspace / done opacity when not available
-
     const game = {
         isRunning: false,
         secret: [],
         guesses: [],
+        gameWon: null,
         correctNumbers: 0,
         correctPositions: 0,
         currentRow: null,
         currentCell: null,
         startGame() {
             this.isRunning = true;
+            this.generateSecret();
             this.clearTable();
             document.querySelector('.table-header').nextElementSibling.classList.add('current-row');
             this.selectCurrentRow();
         },
         stopGame() {
-            //todo: show popup with secret, guesses.length, play again button
+            openModal();
             this.isRunning = false;
         },
         generateSecret() {
+            this.resetProperties();
             while (this.secret.length < 4) {
                 const randomNumber = Math.floor(Math.random() * 10);
                 if (!this.secret.includes(randomNumber)) {
                     this.secret.push(randomNumber);
                 }
             }
-            this.startGame();
         },
         checkGuess(currentRow) {
             const currentGuess = currentRow.querySelector('[data-cell="guess"]').textContent;
@@ -154,9 +152,47 @@ document.addEventListener('DOMContentLoaded', () => {
                 tableRow.querySelector('[data-cell="correct-numbers"]').textContent = '';
                 tableRow.querySelector('[data-cell="correct-positions"]').textContent = '';
             });
+        },
+        resetProperties() {
+            this.secret = [];
+            this.guesses = [];
+            this.gameWon = null;
+            this.correctNumbers = 0;
+            this.correctPositions = 0;
         }
     }
 
-    game.generateSecret();
-    console.log(game.secret.join(''));
+    game.startGame();
+
+    // POPUP
+
+    const popupContainer = document.querySelector('.popup');
+    const playAgainButton = document.querySelector('.popup-play-again');
+    const popupTitle = document.querySelector('.popup-title');
+    const popupSecret = document.querySelector('.popup-secret');
+    const popupGuesses = document.querySelector('.popup-guesses');
+    const popupGuessesEnd = document.querySelector('.popup-guesses-end');
+
+    function closeModal() {
+        popupContainer.close();
+        popupContainer.classList.toggle('hidden');
+    }
+
+    function openModal() {
+        updatePopup();
+        popupContainer.classList.toggle('hidden');
+        popupContainer.showModal();
+    }
+
+    function updatePopup() {
+        popupTitle.textContent = game.gameWon ? 'You won!' : 'You lost...';
+        popupSecret.textContent = game.secret.join('');
+        popupGuesses.innerText = game.guesses.length.toString();
+        popupGuessesEnd.innerHTML = game.guesses.length <= 1 ? ' guess' : ' guesses';
+    }
+
+    playAgainButton.addEventListener('click', () => {
+        closeModal()
+        game.startGame();
+    });
 });

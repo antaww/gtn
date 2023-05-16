@@ -29,10 +29,21 @@
                 <div class="game-title">GUESS THE<br/>NUMB3R</div>
             </div>
             <div class="game-ui">
+                <dialog class="popup hidden">
+                    <div class="popup-container">
+                        <div class="popup-title"></div>
+                        <hr>
+                        <div class="popup-content">
+                            <div class="popup-secret-container">The secret was <span class="popup-secret"></span></div>
+                            <div class="popup-guesses-container">You've done <span class="popup-guesses"></span> <span class="popup-guesses-end"></span></div>
+                            <button class="popup-play-again">Play Again</button>
+                        </div>
+                    </div>
+                </dialog>
                 <table role="table">
                     <tbody role="rowgroup">
                         <tr role="row" class="table-header">
-                            <th>Guess</th>
+                            <th>Guesses</th>
                             <th>Correct Numbers</th>
                             <th>Correct Positions</th>
                         </tr>
